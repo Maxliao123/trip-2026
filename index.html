@@ -70,6 +70,11 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .st-done{background:#D5F5E3;color:#145A32}
 .st-now{background:#FDEBD0;color:#784212}
 .st-plan{background:#E8E4DC;color:#6B6860}
+.ov tr[data-go]{cursor:pointer}
+.ov tr[data-go]:active{background:#F0EDE7}
+.day.flash{animation:flash 1.6s ease}
+@keyframes flash{0%,100%{box-shadow:0 0 0 0 rgba(192,147,42,0)}25%{box-shadow:0 0 0 3px rgba(192,147,42,.7)}}
+.foot{text-align:center;font-size:.68rem;color:var(--sub);padding:1.2rem 1rem 2rem;border-top:1px solid var(--border);margin-top:.5rem}
 </style>
 </head>
 <body>
@@ -173,6 +178,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 <div class="day done"><div class="dh"><div class="dl" style="background:#117A65"><div class="dl-check">✓</div><div class="dl-seg">Day 8</div><div class="dl-date">5/29</div><div class="dl-week">週五</div></div><div class="dr"><div class="dt">LuLu Island酒莊冰酒 · Costco · UBC玫瑰園 · Acadia Beach夕陽</div></div></div><div class="db">
 <div class="it"><div class="dot"></div><span>上午在家整理</span></div>
 <div class="it hl"><div class="dot"></div><span>⭐ 下午 LuLu Island Winery 試喝買冰酒——媽媽買了 15 瓶冰酒！！🍷</span></div>
+<div class="it g"><div class="dot"></div><span>💡 加拿大結帳、台灣收貨可免 15% 稅；搭配端午節活動買 12 送 1</span></div>
 <div class="it"><div class="dot"></div><span>Costco 買水杯</span></div>
 <div class="it"><div class="dot"></div><span>UBC 玫瑰園 Rose Garden</span></div>
 <div class="it hl"><div class="dot"></div><span>⭐ Acadia Beach 看夕陽 🌅</span></div>
@@ -301,13 +307,46 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
 </div>
 
+<div class="foot">最後更新：2026/05/30 · 💡 點總覽任一天可跳到詳細行程</div>
+
 <script>
 function sw(n){
   document.querySelectorAll('.pn').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('p'+n).classList.add('on');
   document.querySelectorAll('.tab').forEach(t=>{if(parseInt(t.dataset.i)===n)t.classList.add('on')});
+  window.scrollTo({top:0});
 }
+// 自動建立「日期 → 詳細行程卡片」對照表
+var dayMap={};
+document.querySelectorAll('.pn').forEach(function(panel){
+  if(panel.id==='p0')return;
+  var n=parseInt(panel.id.slice(1));
+  panel.querySelectorAll('.day').forEach(function(day){
+    var d='';
+    var dd=day.querySelector('.dl-date');
+    if(dd){d=dd.textContent.trim();}
+    else{var ht=day.querySelector('.tc-ht');if(ht){var m=ht.textContent.match(/(\d{1,2}\/\d{1,2})/);if(m)d=m[1];}}
+    if(d&&!dayMap[d]){dayMap[d]={n:n,el:day};}
+  });
+});
+// 讓總覽每一天可點擊跳轉
+document.querySelectorAll('#p0 tr').forEach(function(tr){
+  var ob=tr.querySelector('.ob');
+  if(!ob)return;
+  var m=ob.textContent.match(/(\d{1,2}\/\d{1,2})/);
+  if(!m||!dayMap[m[1]])return;
+  var t=dayMap[m[1]];
+  tr.setAttribute('data-go',m[1]);
+  tr.addEventListener('click',function(){
+    sw(t.n);
+    setTimeout(function(){
+      t.el.scrollIntoView({behavior:'smooth',block:'center'});
+      t.el.classList.add('flash');
+      setTimeout(function(){t.el.classList.remove('flash');},1600);
+    },70);
+  });
+});
 </script>
 </body>
 </html>
