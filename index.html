@@ -77,6 +77,12 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .foot{text-align:center;font-size:.68rem;color:var(--sub);padding:1.2rem 1rem 2rem;border-top:1px solid var(--border);margin-top:.5rem}
 .maplink{display:block;background:#1A5276;color:#fff;text-align:center;border-radius:8px;padding:.55rem;font-size:.8rem;font-weight:600;text-decoration:none;margin:.1rem 0 .55rem}
 .maplink:active{background:#14405e}
+.dquick{display:flex;gap:.4rem;overflow-x:auto;padding:.6rem .25rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.dquick::-webkit-scrollbar{display:none}
+.dchip{flex-shrink:0;background:#fff;border:1px solid var(--border);border-radius:10px;padding:.35rem .6rem;font-size:.7rem;font-weight:600;color:var(--text);cursor:pointer;text-align:center;line-height:1.25;min-width:54px}
+.dchip:active{background:#F0EDE7}
+.dchip .dc-d{color:#1A5276}
+.dchip .dc-w{font-size:.6rem;color:var(--sub);font-weight:400}
 .it.rest span{color:#1A5276;font-weight:500}
 .it.rest .dot{background:#1A5276}
 .dnote{background:#FBF8F1;border:1px dashed #D6C18A;border-radius:8px;padding:.5rem .7rem;margin:.1rem 0 .6rem;font-size:.74rem;line-height:1.75;color:#6b5526}
@@ -100,6 +106,8 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
 <!-- OVERVIEW -->
 <div id="p0" class="pn on">
+<div class="sl">📅 快速跳到當天</div>
+<div class="dquick" id="dquick"></div>
 <table class="ov">
 <tr class="sec"><td colspan="3">🌆 溫哥華前段</td></tr>
 <tr><td><span class="ob" style="background:#555">5/22 五</span></td><td style="color:var(--sub)">爸媽 HX080 抵YVR <strong style="color:var(--text)">20:15</strong><span class="status st-done">✅</span></td><td style="color:var(--sub);font-size:.7rem;white-space:nowrap">🏠 Richmond</td></tr>
@@ -390,22 +398,35 @@ document.querySelectorAll('.pn').forEach(function(panel){
     if(d&&!dayMap[d]){dayMap[d]={n:n,el:day};}
   });
 });
-// 讓總覽每一天可點擊跳轉
+// 共用：跳到某天的詳細行程卡片
+function goDay(d){
+  var t=dayMap[d];if(!t)return;
+  sw(t.n);
+  setTimeout(function(){
+    t.el.scrollIntoView({behavior:'smooth',block:'center'});
+    t.el.classList.add('flash');
+    setTimeout(function(){t.el.classList.remove('flash');},1600);
+  },70);
+}
+// 總覽上方「日期快選」一排，照總覽每一列的日期順序產生
+var dq=document.getElementById('dquick');
 document.querySelectorAll('#p0 tr').forEach(function(tr){
   var ob=tr.querySelector('.ob');
   if(!ob)return;
-  var m=ob.textContent.match(/(\d{1,2}\/\d{1,2})/);
+  var txt=ob.textContent.trim();
+  var m=txt.match(/(\d{1,2}\/\d{1,2})\s*(\S)?/);
   if(!m||!dayMap[m[1]])return;
-  var t=dayMap[m[1]];
+  // 總覽列本身也可點
   tr.setAttribute('data-go',m[1]);
-  tr.addEventListener('click',function(){
-    sw(t.n);
-    setTimeout(function(){
-      t.el.scrollIntoView({behavior:'smooth',block:'center'});
-      t.el.classList.add('flash');
-      setTimeout(function(){t.el.classList.remove('flash');},1600);
-    },70);
-  });
+  tr.addEventListener('click',function(){goDay(m[1]);});
+  // 產生快選 chip
+  if(dq){
+    var chip=document.createElement('div');
+    chip.className='dchip';
+    chip.innerHTML='<span class="dc-d">'+m[1]+'</span><br><span class="dc-w">'+(m[2]||'')+'</span>';
+    chip.addEventListener('click',function(){goDay(m[1]);});
+    dq.appendChild(chip);
+  }
 });
 </script>
 </body>
