@@ -83,6 +83,10 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .dchip:active{background:#F0EDE7}
 .dchip .dc-d{color:#1A5276}
 .dchip .dc-w{font-size:.6rem;color:var(--sub);font-weight:400}
+.dchip.today{background:#1A5276;border-color:#1A5276}
+.dchip.today .dc-d,.dchip.today .dc-w{color:#fff}
+.ov tr.today-row{background:#FDF6E3}
+.ov tr.today-row .ob{box-shadow:0 0 0 2px #C0932A}
 .it.rest span{color:#1A5276;font-weight:500}
 .it.rest .dot{background:#1A5276}
 .dnote{background:#FBF8F1;border:1px dashed #D6C18A;border-radius:8px;padding:.5rem .7rem;margin:.1rem 0 .6rem;font-size:.74rem;line-height:1.75;color:#6b5526}
@@ -410,6 +414,9 @@ function goDay(d){
 }
 // 總覽上方「日期快選」一排，照總覽每一列的日期順序產生
 var dq=document.getElementById('dquick');
+var _n=new Date();
+var todayStr=(_n.getMonth()+1)+'/'+_n.getDate();
+var todayChip=null;
 document.querySelectorAll('#p0 tr').forEach(function(tr){
   var ob=tr.querySelector('.ob');
   if(!ob)return;
@@ -419,15 +426,19 @@ document.querySelectorAll('#p0 tr').forEach(function(tr){
   // 總覽列本身也可點
   tr.setAttribute('data-go',m[1]);
   tr.addEventListener('click',function(){goDay(m[1]);});
+  if(m[1]===todayStr)tr.classList.add('today-row');
   // 產生快選 chip
   if(dq){
     var chip=document.createElement('div');
     chip.className='dchip';
     chip.innerHTML='<span class="dc-d">'+m[1]+'</span><br><span class="dc-w">'+(m[2]||'')+'</span>';
     chip.addEventListener('click',function(){goDay(m[1]);});
+    if(m[1]===todayStr){chip.classList.add('today');todayChip=chip;}
     dq.appendChild(chip);
   }
 });
+// 自動把今天的日期卡捲到可視範圍
+if(todayChip&&dq){dq.scrollLeft=todayChip.offsetLeft-12;}
 </script>
 </body>
 </html>
