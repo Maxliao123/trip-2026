@@ -490,39 +490,40 @@ if(todayChip&&dq){dq.scrollLeft=todayChip.offsetLeft-12;}
 
 // ===== 行程地圖 (Leaflet) =====
 // 每天：色、停點(名/座標)、每段距離(km/時間)
+// 停點格式：[名稱, 緯, 經, 該段說明, 該段km]
 var MAPDATA={
  '5/30':{c:'#6E2C00',t:'Richmond → Hope → 七彩湖 → Vernon',s:[
-   ['Richmond',49.166,-123.133,''],['Bridal Veil Falls',49.181,-121.738,'約120km · 1.5h'],
-   ['Hope',49.383,-121.441,'約35km · 30分'],['Merritt',50.112,-120.788,'約115km · 1h'],
-   ['七彩湖 Kal Lookout',50.205,-119.297,'約150km · 1h45'],['Vernon 住宿',50.267,-119.272,'約12km · 15分']]},
+   ['Richmond',49.166,-123.133,'',0],['Bridal Veil Falls',49.181,-121.738,'約120km · 1.5h',120],
+   ['Hope',49.383,-121.441,'約35km · 30分',35],['Merritt',50.112,-120.788,'約115km · 1h',115],
+   ['七彩湖 Kal Lookout',50.205,-119.297,'約150km · 1h45',150],['Vernon 住宿',50.267,-119.272,'約12km · 15分',12]]},
  '5/31':{c:'#935116',t:'Vernon → Rogers Pass → Emerald Lake → Dead Man\'s Flats',s:[
-   ['Vernon',50.267,-119.272,''],['Revelstoke',50.998,-118.196,'約150km · 2h'],
-   ['Rogers Pass',51.300,-117.519,'約75km · 1h'],['Golden',51.296,-116.964,'約80km · 1h'],
-   ['Natural Bridge',51.388,-116.530,'約55km · 50分'],['Emerald Lake',51.443,-116.528,'約8km · 15分'],
-   ['Dead Man\'s Flats 住宿',51.045,-115.250,'約150km · 1h45(+1h時差)']]},
+   ['Vernon',50.267,-119.272,'',0],['Revelstoke',50.998,-118.196,'約150km · 2h',150],
+   ['Rogers Pass',51.300,-117.519,'約75km · 1h',75],['Golden',51.296,-116.964,'約80km · 1h',80],
+   ['Natural Bridge',51.388,-116.530,'約55km · 50分',55],['Emerald Lake',51.443,-116.528,'約8km · 15分',8],
+   ['Dead Man\'s Flats 住宿',51.045,-115.250,'約150km · 1h45(+1h時差)',150]]},
  '6/1':{c:'#4A235A',t:'BL1 跟團：硫磺山纜車 · Bow Falls · Vermilion Lakes',s:[
-   ['Dead Man\'s Flats',51.045,-115.250,''],['硫磺山纜車',51.148,-115.573,'約30km · 30分'],
-   ['Bow Falls',51.167,-115.561,'約3km'],['Vermilion Lakes',51.180,-115.600,'約4km'],
-   ['回 Dead Man\'s Flats',51.045,-115.250,'約32km · 30分']]},
+   ['Dead Man\'s Flats',51.045,-115.250,'',0],['硫磺山纜車',51.148,-115.573,'約30km · 30分',30],
+   ['Bow Falls',51.167,-115.561,'約3km',3],['Vermilion Lakes',51.180,-115.600,'約4km',4],
+   ['回 Dead Man\'s Flats',51.045,-115.250,'約32km · 30分',32]]},
  '6/2':{c:'#6C3483',t:'弓湖 → 佩托湖（步道結冰折返）→ Thai House',s:[
-   ['Dead Man\'s Flats',51.045,-115.250,''],['弓湖 Bow Lake',51.671,-116.456,'約130km · 1h40'],
-   ['佩托湖 Peyto Lake',51.716,-116.526,'約10km · 15分'],['Thai House Canmore',51.089,-115.358,'約155km · 2h']]},
+   ['Dead Man\'s Flats',51.045,-115.250,'',0],['弓湖 Bow Lake',51.671,-116.456,'約130km · 1h40',130],
+   ['佩托湖 Peyto Lake',51.716,-116.526,'約10km · 15分',10],['Thai House Canmore',51.089,-115.358,'約155km · 2h',155]]},
  '6/3':{c:'#4A235A',t:'MLSR 跟團：夢蓮湖日出 · 露易絲湖（午睡後再搭纜車）',s:[
-   ['Dead Man\'s Flats',51.045,-115.250,''],['夢蓮湖 Moraine Lake',51.327,-116.186,'約95km · 1h15'],
-   ['露易絲湖 Lake Louise',51.417,-116.218,'約13km · 15分'],['回 Dead Man\'s Flats',51.045,-115.250,'約100km · 1h20']]},
+   ['Dead Man\'s Flats',51.045,-115.250,'',0],['夢蓮湖 Moraine Lake',51.327,-116.186,'約95km · 1h15',95],
+   ['露易絲湖 Lake Louise',51.417,-116.218,'約13km · 15分',13],['回 Dead Man\'s Flats',51.045,-115.250,'約100km · 1h20',100]]},
  '6/4':{c:'#922B21',t:'Golden → Last Spike → Chase 瀑布 → Kamloops',s:[
-   ['Dead Man\'s Flats',51.045,-115.250,''],['Golden 午餐',51.296,-116.964,'約140km · 2h(-1h時差)'],
-   ['Rogers Pass',51.300,-117.519,'約80km · 55分'],['Last Spike (Craigellachie)',50.974,-118.726,'約90km · 1h15'],
-   ['Chase Creek Falls',50.819,-119.685,'約75km · 1h'],['Kamloops 住宿',50.674,-120.328,'約55km · 45分']]},
+   ['Dead Man\'s Flats',51.045,-115.250,'',0],['Golden 午餐',51.296,-116.964,'約140km · 2h(-1h時差)',140],
+   ['Rogers Pass',51.300,-117.519,'約80km · 55分',80],['Last Spike (Craigellachie)',50.974,-118.726,'約90km · 1h15',90],
+   ['Chase Creek Falls',50.819,-119.685,'約75km · 1h',75],['Kamloops 住宿',50.674,-120.328,'約55km · 45分',55]]},
  '6/5':{c:'#922B21',t:'Kamloops → Chilliwack → Birchwood 農場 → Richmond',s:[
-   ['Kamloops',50.674,-120.328,''],['Britton Creek 休息區',49.780,-121.050,'約110km · 1h30'],
-   ['District 1881 (Chilliwack)',49.158,-121.951,'約85km · 1h10'],['Birchwood Dairy',49.073,-122.273,'約30km · 25分'],
-   ['Richmond 回家',49.166,-123.133,'約60km · 45分']]},
+   ['Kamloops',50.674,-120.328,'',0],['Britton Creek 休息區',49.780,-121.050,'約110km · 1h30',110],
+   ['District 1881 (Chilliwack)',49.158,-121.951,'約85km · 1h10',85],['Birchwood Dairy',49.073,-122.273,'約30km · 25分',30],
+   ['Richmond 回家',49.166,-123.133,'約60km · 45分',60]]},
  '6/6':{c:'#145A32',t:'漁人碼頭 → 奧運村 → Granville Island → Richmond',s:[
-   ['Steveston 漁人碼頭',49.125,-123.182,''],['奧運村 Olympic Village',49.266,-123.114,'約22km · 30分'],
-   ['Granville Island',49.271,-123.135,'彩虹小船'],['Richmond 回家',49.166,-123.133,'約15km · 25分']]},
+   ['Steveston 漁人碼頭',49.125,-123.182,'',0],['奧運村 Olympic Village',49.266,-123.114,'約22km · 30分',22],
+   ['Granville Island',49.271,-123.135,'彩虹小船',2],['Richmond 回家',49.166,-123.133,'約15km · 25分',15]]},
  '6/7':{c:'#1E8449',t:'Steveston → 告別晚餐 → 送機 YVR',s:[
-   ['Steveston',49.125,-123.182,''],['YVR 機場',49.195,-123.182,'約8km · 15分']]}
+   ['Steveston',49.125,-123.182,'',0],['YVR 機場',49.195,-123.182,'約8km · 15分',8]]}
 };
 var _tmap,_tlayer,_tmInit=false;
 function initTripMap(){
@@ -530,39 +531,58 @@ function initTripMap(){
     _tmap=L.map('tripmap',{scrollWheelZoom:false}).setView([50.5,-119.5],6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(_tmap);
     _tlayer=L.layerGroup().addTo(_tmap);
-    // 日期 chip
     var md=document.getElementById('mapdays');
+    // 「全部」chip
+    var all=document.createElement('div');all.className='dchip';all.innerHTML='<span class="dc-d">全部</span>';all.style.borderColor='#2C2C2A';
+    all.addEventListener('click',function(){selChip(all,'#2C2C2A');showAll();});
+    md.appendChild(all);
+    // 每天 chip
     Object.keys(MAPDATA).forEach(function(d){
       var c=document.createElement('div');c.className='dchip';
-      c.innerHTML='<span class="dc-d">'+d+'</span>';
-      c.style.borderColor=MAPDATA[d].c;
-      c.addEventListener('click',function(){
-        document.querySelectorAll('#mapdays .dchip').forEach(function(x){x.style.background='#fff';x.querySelector('.dc-d').style.color='#1A5276';});
-        c.style.background=MAPDATA[d].c;c.querySelector('.dc-d').style.color='#fff';
-        showMapDay(d);
-      });
+      c.innerHTML='<span class="dc-d">'+d+'</span>';c.style.borderColor=MAPDATA[d].c;
+      c.addEventListener('click',function(){selChip(c,MAPDATA[d].c);showMapDay(d);});
       md.appendChild(c);
     });
     _tmInit=true;
-    var first=(typeof todayStr!=='undefined'&&MAPDATA[todayStr])?todayStr:Object.keys(MAPDATA)[0];
-    showMapDay(first);
-    document.querySelectorAll('#mapdays .dchip').forEach(function(x){if(x.querySelector('.dc-d').textContent===first){x.style.background=MAPDATA[first].c;x.querySelector('.dc-d').style.color='#fff';}});
+    var first=(typeof todayStr!=='undefined'&&MAPDATA[todayStr])?todayStr:null;
+    if(first){
+      var chips=md.querySelectorAll('.dchip');chips.forEach(function(x){if(x.querySelector('.dc-d').textContent===first){selChip(x,MAPDATA[first].c);}});
+      showMapDay(first);
+    } else { selChip(all,'#2C2C2A'); showAll(); }
   }
   _tmap.invalidateSize();
+}
+function selChip(chip,color){
+  document.querySelectorAll('#mapdays .dchip').forEach(function(x){x.style.background='#fff';x.querySelector('.dc-d').style.color='#1A5276';});
+  chip.style.background=color;chip.querySelector('.dc-d').style.color='#fff';
 }
 function showMapDay(d){
   var data=MAPDATA[d];if(!data)return;
   _tlayer.clearLayers();
-  var pts=[],html='';
+  var pts=[],html='',totkm=0;
   data.s.forEach(function(st,idx){
-    var ll=[st[1],st[2]];pts.push(ll);
+    var ll=[st[1],st[2]];pts.push(ll);totkm+=(st[4]||0);
     L.circleMarker(ll,{radius:7,color:'#fff',weight:2,fillColor:data.c,fillOpacity:1}).addTo(_tlayer).bindPopup((idx+1)+'. '+st[0]);
     if(st[3])html+='<div class="mleg">↓ '+st[3]+'</div>';
     html+='<div class="mstop"><span class="num" style="background:'+data.c+'">'+(idx+1)+'</span><span>'+st[0]+'</span></div>';
   });
   L.polyline(pts,{color:data.c,weight:4,opacity:.75}).addTo(_tlayer);
   _tmap.fitBounds(L.latLngBounds(pts).pad(0.2));
-  document.getElementById('maplist').innerHTML='<div class="mlist"><div class="mlist-h" style="background:'+data.c+'"><span>'+d+'</span><span class="tot">'+data.t+'</span></div>'+html+'</div>';
+  document.getElementById('maplist').innerHTML='<div class="mlist"><div class="mlist-h" style="background:'+data.c+'"><span>'+d+'　🚗 當天約 '+totkm+' km</span><span class="tot">'+data.t+'</span></div>'+html+'</div>';
+}
+function showAll(){
+  _tlayer.clearLayers();
+  var allpts=[],html='',grand=0;
+  Object.keys(MAPDATA).forEach(function(d){
+    var data=MAPDATA[d],pts=[],daykm=0;
+    data.s.forEach(function(st){var ll=[st[1],st[2]];pts.push(ll);allpts.push(ll);daykm+=(st[4]||0);
+      L.circleMarker(ll,{radius:5,color:'#fff',weight:1,fillColor:data.c,fillOpacity:1}).addTo(_tlayer).bindPopup(d+'：'+st[0]);});
+    L.polyline(pts,{color:data.c,weight:4,opacity:.7}).addTo(_tlayer);
+    grand+=daykm;
+    html+='<div class="mstop"><span class="num" style="background:'+data.c+'">●</span><span>'+d+'　'+data.t+'　<b>'+daykm+' km</b></span></div>';
+  });
+  _tmap.fitBounds(L.latLngBounds(allpts).pad(0.15));
+  document.getElementById('maplist').innerHTML='<div class="mlist"><div class="mlist-h" style="background:#2C2C2A"><span>全部行程</span><span class="tot">🚗 總計約 '+grand+' km</span></div>'+html+'</div>';
 }
 </script>
 </body>
