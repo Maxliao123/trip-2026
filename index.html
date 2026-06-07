@@ -441,9 +441,13 @@ document.querySelectorAll('.pn').forEach(function(panel){
       (day.querySelector('.db')||day).appendChild(pc);
       loadPhotos(pc,key);
       var lw=document.createElement('span'); lw.className='localwrap'; lw.style.display='contents'; pc.appendChild(lw);
-      var add=document.createElement('div'); add.className='addph'; add.innerHTML='<b>＋</b>加照片'; add.setAttribute('data-day',key);
+      var add=document.createElement('div'); add.className='addph'; add.innerHTML='<b>＋</b>加照片<span style="font-size:.55rem;color:#999">(只有我)</span>'; add.setAttribute('data-day',key);
       add.addEventListener('click',function(){addPhotos(key,pc);});
       pc.appendChild(add);
+      var sh=document.createElement('a'); sh.className='addph'; sh.style.textDecoration='none';
+      sh.innerHTML='<b>📤</b>共享上傳<span style="font-size:.55rem;color:#999">'+key+'_1.jpg</span>';
+      sh.href='https://github.com/maxliao123/trip-2026/upload/main/photos'; sh.target='_blank'; sh.rel='noopener';
+      pc.appendChild(sh);
     }
   });
 });
@@ -451,7 +455,7 @@ document.querySelectorAll('.pn').forEach(function(panel){
 function loadPhotos(box,key){
   var i=1;
   (function next(){
-    if(i>30)return;
+    if(i>10)return;
     var probe=new Image();
     probe.onload=function(){
       var a=document.createElement('a');a.href='photos/'+key+'_'+i+'.jpg';a.target='_blank';a.rel='noopener';
