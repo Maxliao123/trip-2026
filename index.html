@@ -95,6 +95,14 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .photos{display:flex;gap:.4rem;overflow-x:auto;padding:.35rem 0 .1rem;scrollbar-width:none}
 .photos::-webkit-scrollbar{display:none}
 .photos img{height:92px;border-radius:8px;object-fit:cover;display:block;flex-shrink:0}
+.lp{position:relative;flex-shrink:0}
+.lp img{height:92px;border-radius:8px;object-fit:cover;display:block;cursor:pointer}
+.lpx{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);color:#fff;width:18px;height:18px;border-radius:50%;font-size:.7rem;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.addph{flex-shrink:0;height:92px;width:92px;border:2px dashed var(--border);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--sub);font-size:.66rem;cursor:pointer;gap:.15rem;background:#fff}
+.addph b{font-size:1.1rem;font-weight:400;line-height:1}
+.lbox{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:9999}
+.lbox.on{display:flex}
+.lbox img{max-width:94%;max-height:90%;border-radius:8px}
 .maprow{display:flex;align-items:center;gap:.6rem;background:#fff;border:1px solid var(--border);border-radius:10px;padding:.6rem .7rem;margin-bottom:.5rem;text-decoration:none;color:var(--text)}
 .maprow .md{font-weight:700;font-size:.8rem;color:#1A5276;min-width:46px}
 .maprow .mt{flex:1;font-size:.76rem;line-height:1.4}
@@ -426,12 +434,16 @@ document.querySelectorAll('.pn').forEach(function(panel){
     if(dd){d=dd.textContent.trim();}
     else{var ht=day.querySelector('.tc-ht');if(ht){var m=ht.textContent.match(/(\d{1,2}\/\d{1,2})/);if(m)d=m[1];}}
     if(d&&!dayMap[d]){dayMap[d]={n:n,el:day};}
-    // 每天自動相簿：載入 photos/{mmdd}_1.jpg、_2.jpg…
+    // 每天相簿：① GitHub /photos 的公開照片 ② 本機新增的照片 ③ 加照片按鈕
     if(d){
       var pa=d.split('/'); var key=('0'+pa[0]).slice(-2)+('0'+pa[1]).slice(-2);
-      var pc=document.createElement('div'); pc.className='photos';
+      var pc=document.createElement('div'); pc.className='photos'; pc.setAttribute('data-day',key);
       (day.querySelector('.db')||day).appendChild(pc);
       loadPhotos(pc,key);
+      var lw=document.createElement('span'); lw.className='localwrap'; lw.style.display='contents'; pc.appendChild(lw);
+      var add=document.createElement('div'); add.className='addph'; add.innerHTML='<b>＋</b>加照片'; add.setAttribute('data-day',key);
+      add.addEventListener('click',function(){addPhotos(key,pc);});
+      pc.appendChild(add);
     }
   });
 });
@@ -450,6 +462,52 @@ function loadPhotos(box,key){
     probe.src='photos/'+key+'_'+i+'.jpg';
   })();
 }
+// ===== 本機相簿 (IndexedDB，存在這台裝置) =====
+var PDB=null;
+function openPDB(cb){
+  try{
+    var r=indexedDB.open('tripphotos',1);
+    r.onupgradeneeded=function(e){var db=e.target.result;if(!db.objectStoreNames.contains('p'))db.createObjectStore('p',{keyPath:'id',autoIncrement:true});};
+    r.onsuccess=function(e){PDB=e.target.result;cb&&cb();};
+    r.onerror=function(){};
+  }catch(e){}
+}
+function pGet(day,cb){if(!PDB){cb([]);return;}var req=PDB.transaction('p','readonly').objectStore('p').getAll();req.onsuccess=function(){cb(req.result.filter(function(x){return x.day===day;}));};}
+function pAdd(day,img,cb){var tx=PDB.transaction('p','readwrite');tx.objectStore('p').add({day:day,img:img});tx.oncomplete=cb;}
+function pDel(id,cb){var tx=PDB.transaction('p','readwrite');tx.objectStore('p').delete(id);tx.oncomplete=cb;}
+function compress(file,cb){
+  var img=new Image(),url=URL.createObjectURL(file);
+  img.onload=function(){var max=1280,w=img.width,h=img.height;if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+    var cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);URL.revokeObjectURL(url);cb(cv.toDataURL('image/jpeg',0.7));};
+  img.onerror=function(){URL.revokeObjectURL(url);};img.src=url;
+}
+function addPhotos(day,box){
+  if(!PDB){alert('此瀏覽器不支援本機相簿');return;}
+  pGet(day,function(ex){
+    var room=10-ex.length;
+    if(room<=0){alert('這天已經 10 張囉（每天上限 10 張）');return;}
+    var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.multiple=true;
+    inp.onchange=function(){
+      var files=Array.prototype.slice.call(inp.files,0,room),i=0;
+      (function nxt(){if(i>=files.length){renderLocal(box,day);return;}compress(files[i],function(dataURL){if(dataURL){pAdd(day,dataURL,function(){i++;nxt();});}else{i++;nxt();}});})();
+    };
+    inp.click();
+  });
+}
+function renderLocal(box,day){
+  var wrap=box.querySelector('.localwrap');if(!wrap)return;wrap.innerHTML='';
+  pGet(day,function(rows){
+    rows.forEach(function(r){
+      var d=document.createElement('div');d.className='lp';
+      var im=document.createElement('img');im.src=r.img;im.addEventListener('click',function(){var lb=document.getElementById('lbox');document.getElementById('lboximg').src=r.img;lb.classList.add('on');});
+      var x=document.createElement('span');x.className='lpx';x.textContent='✕';x.addEventListener('click',function(e){e.stopPropagation();if(confirm('刪除這張照片？'))pDel(r.id,function(){renderLocal(box,day);});});
+      d.appendChild(im);d.appendChild(x);wrap.appendChild(d);
+    });
+    var add=box.querySelector('.addph');if(add)add.style.display=(rows.length>=10)?'none':'flex';
+  });
+}
+// 開啟資料庫後，把每天本機照片渲染出來
+openPDB(function(){document.querySelectorAll('.photos[data-day]').forEach(function(box){renderLocal(box,box.getAttribute('data-day'));});});
 // 共用：跳到某天的詳細行程卡片
 function goDay(d){
   var t=dayMap[d];if(!t)return;
@@ -607,5 +665,6 @@ function showAll(){
   document.getElementById('maplist').innerHTML='<div class="mlist"><div class="mlist-h" style="background:#2C2C2A"><span>全部行程</span><span class="tot">🚗 總計約 '+grand+' km</span></div>'+html+'</div>';
 }
 </script>
+<div class="lbox" id="lbox" onclick="this.classList.remove('on')"><img id="lboximg" src=""></div>
 </body>
 </html>
