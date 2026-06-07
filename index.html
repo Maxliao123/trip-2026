@@ -115,8 +115,8 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .mstop .num{width:18px;height:18px;border-radius:50%;background:var(--border);color:#fff;font-size:.62rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;font-weight:700}
 .mleg{padding:.2rem .8rem .2rem 2rem;font-size:.7rem;color:var(--sub)}
 </style>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" onerror="var l=document.createElement('link');l.rel='stylesheet';l.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(l);"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';document.head.appendChild(s);"></script>
 </head>
 <body>
 <div class="hero">
@@ -633,9 +633,17 @@ var MAPDATA={
    ['公寓 Cooney Rd',49.168,-123.139,'約1km',1],['Townhouse Francis Rd',49.155,-123.165,'約5km',5],
    ['House Chatsworth Rd',49.155,-123.140,'約3km',3],['YVR 機場',49.195,-123.182,'約8km · 15分',8]]}
 };
-var _tmap,_tlayer,_tmInit=false;
+var _tmap,_tlayer,_tmInit=false,_tmTries=0;
 function initTripMap(){
+  if(typeof L==='undefined'){
+    var box=document.getElementById('tripmap');
+    if(box&&!_tmInit)box.innerHTML='<div style="padding:1.2rem;font-size:.82rem;color:#6B6860;text-align:center">地圖載入中…（需要網路連線）</div>';
+    if(_tmTries++<25)return void setTimeout(initTripMap,400);
+    if(box)box.innerHTML='<div style="padding:1.2rem;font-size:.82rem;color:#922B21;text-align:center">地圖套件載入失敗，請檢查網路或重新整理</div>';
+    return;
+  }
   if(!_tmInit){
+    document.getElementById('tripmap').innerHTML='';
     _tmap=L.map('tripmap',{scrollWheelZoom:false}).setView([50.5,-119.5],6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(_tmap);
     _tlayer=L.layerGroup().addTo(_tmap);
