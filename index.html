@@ -440,6 +440,7 @@ document.querySelectorAll('.pn').forEach(function(panel){
       var pc=document.createElement('div'); pc.className='photos'; pc.setAttribute('data-day',key);
       (day.querySelector('.db')||day).appendChild(pc);
       loadPhotos(pc,key);
+      loadExtra(pc,key);
       var lw=document.createElement('span'); lw.className='localwrap'; lw.style.display='contents'; pc.appendChild(lw);
       var add=document.createElement('div'); add.className='addph'; add.innerHTML='<b>＋</b>加照片<span style="font-size:.55rem;color:#999">(只有我)</span>'; add.setAttribute('data-day',key);
       add.addEventListener('click',function(){addPhotos(key,pc);});
@@ -465,6 +466,18 @@ function loadPhotos(box,key){
     probe.onerror=function(){};
     probe.src='photos/'+key+'_'+i+'.jpg';
   })();
+}
+// ===== 共享照片連結（大家都看得到）：把連結加到對應日期即可 =====
+// 格式：'MMDD':['圖片直連網址1','網址2'...]  （Imgur 最穩；Drive 用 thumbnail?id=...&sz=w1200）
+var EXTRA_PHOTOS={
+  // '0606':['https://i.imgur.com/xxxx.jpg'],
+};
+function loadExtra(box,key){
+  var arr=EXTRA_PHOTOS[key];if(!arr)return;
+  arr.forEach(function(u){
+    var a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';
+    var im=document.createElement('img');im.src=u;im.loading='lazy';a.appendChild(im);box.appendChild(a);
+  });
 }
 // ===== 本機相簿 (IndexedDB，存在這台裝置) =====
 var PDB=null;
