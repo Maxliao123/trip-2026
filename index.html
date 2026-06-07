@@ -411,7 +411,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
 <!-- MAP -->
 <div id="p6" class="pn">
-<div class="sl">🗺 行程地圖 · 選日期看路線與距離 <span style="color:#aaa;font-weight:400">(v11)</span></div>
+<div class="sl">🗺 行程地圖 · 選日期看路線與距離 <span style="color:#aaa;font-weight:400">(v12)</span></div>
 <div class="dquick" id="mapdays"></div>
 <div id="tripmap"></div>
 <div id="maplist"></div>
@@ -665,7 +665,9 @@ function initTripMap(){
     setTimeout(function(){try{_tmap.invalidateSize();showAll();}catch(e){}},300);
   }catch(e){
     var ml=document.getElementById('maplist');
-    if(ml)ml.innerHTML='<div style="padding:1rem;color:#922B21;font-size:.8rem">地圖錯誤：'+(e&&e.message?e.message:e)+'</div>';
+    var info='MAPDATA='+(typeof MAPDATA);try{info+=' keys='+Object.keys(MAPDATA).length;}catch(_){info+=' keysFAIL';}
+    var stk=(e&&e.stack)?String(e.stack).split('\n').slice(0,4).join('<br>'):'(no stack)';
+    if(ml)ml.innerHTML='<div style="padding:1rem;color:#922B21;font-size:.72rem;word-break:break-all">地圖錯誤：'+(e&&e.message?e.message:e)+'<br>'+info+'<br>'+stk+'</div>';
   }
 }
 function selChip(chip,color){
