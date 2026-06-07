@@ -99,7 +99,16 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .maprow .md{font-weight:700;font-size:.8rem;color:#1A5276;min-width:46px}
 .maprow .mt{flex:1;font-size:.76rem;line-height:1.4}
 .maprow .mg{font-size:.72rem;color:#fff;background:#1A5276;border-radius:6px;padding:.25rem .5rem;white-space:nowrap}
+#tripmap{height:300px;border-radius:12px;border:1px solid var(--border);margin:.2rem 0 .6rem;z-index:0}
+.mlist{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.mlist-h{padding:.55rem .8rem;color:#fff;font-weight:700;font-size:.85rem;display:flex;justify-content:space-between;align-items:center}
+.mlist-h .tot{font-size:.72rem;font-weight:500;opacity:.95}
+.mstop{padding:.45rem .8rem;font-size:.8rem;border-top:1px solid var(--border);display:flex;gap:.5rem;align-items:flex-start}
+.mstop .num{width:18px;height:18px;border-radius:50%;background:var(--border);color:#fff;font-size:.62rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;font-weight:700}
+.mleg{padding:.2rem .8rem .2rem 2rem;font-size:.7rem;color:var(--sub)}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <div class="hero">
@@ -389,20 +398,10 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
 <!-- MAP -->
 <div id="p6" class="pn">
-<div class="sl">🗺 全程概覽</div>
-<a class="maplink" href="https://www.google.com/maps/dir/Richmond,+BC/Vernon,+BC/250+2+Avenue,+Dead+Man's+Flats,+AB/Kamloops,+BC/Chilliwack,+BC/Richmond,+BC" target="_blank" rel="noopener">🗺 一鍵看整趟路線形狀＋總距離 ↗</a>
-<div class="note b" style="margin:.2rem 0 .6rem">💡 點下面每一天，會在 Google Maps 開啟當天路線，自動顯示距離與行車時間。</div>
-
-<div class="sl">每日路線 · 看距離</div>
-<a class="maprow" href="https://www.google.com/maps/dir/Richmond,+BC/Bridal+Veil+Falls+Provincial+Park,+BC/Hope,+BC/Merritt,+BC/Kalamalka+Lakeview+Drive+Lookout,+Vernon,+BC/5313+21+St,+Vernon,+BC" target="_blank" rel="noopener"><span class="md">5/30</span><span class="mt">Richmond → Hope → 七彩湖 → Vernon</span><span class="mg">看距離 ↗</span></a>
-<a class="maprow" href="https://www.google.com/maps/dir/5313+21+St,+Vernon,+BC/The+Taco+Club,+206+MacKenzie+Ave,+Revelstoke,+BC/Rogers+Pass+Discovery+Centre,+BC/Natural+Bridge,+Field,+BC/Emerald+Lake,+Field,+BC/Thai+House+Restaurant,+Canmore,+AB/250+2+Avenue,+Dead+Man's+Flats,+AB" target="_blank" rel="noopener"><span class="md">5/31</span><span class="mt">Vernon → Rogers Pass → Emerald Lake → Dead Man's Flats</span><span class="mg">看距離 ↗</span></a>
-<a class="maprow" href="https://www.google.com/maps/dir/250+2+Avenue,+Dead+Man's+Flats,+AB/Banff+Gondola,+Banff,+AB/Bow+Falls,+Banff,+AB/Vermilion+Lakes,+Banff,+AB/250+2+Avenue,+Dead+Man's+Flats,+AB" target="_blank" rel="noopener"><span class="md">6/1</span><span class="mt">BL1 跟團：硫磺山纜車 · Bow Falls · Vermilion Lakes</span><span class="mg">看距離 ↗</span></a>
-<a class="maprow" href="https://www.google.com/maps/dir/250+2+Avenue,+Dead+Man's+Flats,+AB/Bow+Lake,+AB/Peyto+Lake,+AB/Thai+House+Restaurant,+Canmore,+AB/250+2+Avenue,+Dead+Man's+Flats,+AB" target="_blank" rel="noopener"><span class="md">6/2</span><span class="mt">弓湖 → 佩托湖（步道結冰折返）→ Thai House</span><span class="mg">看距離 ↗</span></a>
-<a class="maprow" href="https://www.google.com/maps/dir/250+2+Avenue,+Dead+Man's+Flats,+AB/Moraine+Lake,+AB/Lake+Louise,+AB/250+2+Avenue,+Dead+Man's+Flats,+AB" target="_blank" rel="noopener"><span class="md">6/3</span><span class="mt">MLSR 跟團：夢蓮湖日出 · 露易絲湖 · 午睡後再搭纜車</span><span class="mg">看距離 ↗</span></a>
-<a class="maprow" href="https://www.google.com/maps/dir/250+2+Avenue,+Dead+Man's+Flats,+AB/Turning+Point+Restaurant,+Golden,+BC/Rogers+Pass+Discovery+Centre,+BC/The+Last+Spike,+Craigellachie,+BC/Chase+Creek+Falls+Parking+Lot,+Chase,+BC/Nishino+Sushi,+Kamloops,+BC/918+Dever+Drive,+Kamloops,+BC" target="_blank" rel="noopener"><span class="md">6/4</span><span class="mt">Golden → Last Spike → Chase 瀑布 → Kamloops</span><span class="mg">看距離 ↗</span></a>
-<a class="maprow" href="https://www.google.com/maps/dir/918+Dever+Drive,+Kamloops,+BC/Britton+Creek+Rest+Area,+BC/District+1881,+Chilliwack,+BC/Birchwood+Dairy,+1154+Fadden+Rd,+Abbotsford,+BC/Richmond,+BC" target="_blank" rel="noopener"><span class="md">6/5</span><span class="mt">Kamloops → Chilliwack → Birchwood 農場 → Richmond</span><span class="mg">看距離 ↗</span></a>
-<a class="maprow" href="https://www.google.com/maps/dir/Steveston,+Richmond,+BC/Olympic+Village,+Vancouver,+BC/Granville+Island,+Vancouver,+BC/Richmond,+BC" target="_blank" rel="noopener"><span class="md">6/6</span><span class="mt">漁人碼頭 → 奧運村 → Granville Island → Richmond</span><span class="mg">看距離 ↗</span></a>
-<a class="maprow" href="https://www.google.com/maps/dir/Steveston,+Richmond,+BC/Vancouver+International+Airport+(YVR),+Richmond,+BC" target="_blank" rel="noopener"><span class="md">6/7</span><span class="mt">Steveston → 告別晚餐 → 送機 YVR</span><span class="mg">看距離 ↗</span></a>
+<div class="sl">🗺 行程地圖 · 選日期看路線與距離</div>
+<div class="dquick" id="mapdays"></div>
+<div id="tripmap"></div>
+<div id="maplist"></div>
 </div>
 
 <div class="foot">最後更新：2026/06/04 · 💡 點總覽任一天可跳到詳細行程</div>
@@ -414,6 +413,7 @@ function sw(n){
   document.getElementById('p'+n).classList.add('on');
   document.querySelectorAll('.tab').forEach(t=>{if(parseInt(t.dataset.i)===n)t.classList.add('on')});
   window.scrollTo({top:0});
+  if(n===6)setTimeout(initTripMap,80);
 }
 // 自動建立「日期 → 詳細行程卡片」對照表
 var dayMap={};
@@ -487,6 +487,83 @@ document.querySelectorAll('#p0 tr').forEach(function(tr){
 });
 // 自動把今天的日期卡捲到可視範圍
 if(todayChip&&dq){dq.scrollLeft=todayChip.offsetLeft-12;}
+
+// ===== 行程地圖 (Leaflet) =====
+// 每天：色、停點(名/座標)、每段距離(km/時間)
+var MAPDATA={
+ '5/30':{c:'#6E2C00',t:'Richmond → Hope → 七彩湖 → Vernon',s:[
+   ['Richmond',49.166,-123.133,''],['Bridal Veil Falls',49.181,-121.738,'約120km · 1.5h'],
+   ['Hope',49.383,-121.441,'約35km · 30分'],['Merritt',50.112,-120.788,'約115km · 1h'],
+   ['七彩湖 Kal Lookout',50.205,-119.297,'約150km · 1h45'],['Vernon 住宿',50.267,-119.272,'約12km · 15分']]},
+ '5/31':{c:'#935116',t:'Vernon → Rogers Pass → Emerald Lake → Dead Man\'s Flats',s:[
+   ['Vernon',50.267,-119.272,''],['Revelstoke',50.998,-118.196,'約150km · 2h'],
+   ['Rogers Pass',51.300,-117.519,'約75km · 1h'],['Golden',51.296,-116.964,'約80km · 1h'],
+   ['Natural Bridge',51.388,-116.530,'約55km · 50分'],['Emerald Lake',51.443,-116.528,'約8km · 15分'],
+   ['Dead Man\'s Flats 住宿',51.045,-115.250,'約150km · 1h45(+1h時差)']]},
+ '6/1':{c:'#4A235A',t:'BL1 跟團：硫磺山纜車 · Bow Falls · Vermilion Lakes',s:[
+   ['Dead Man\'s Flats',51.045,-115.250,''],['硫磺山纜車',51.148,-115.573,'約30km · 30分'],
+   ['Bow Falls',51.167,-115.561,'約3km'],['Vermilion Lakes',51.180,-115.600,'約4km'],
+   ['回 Dead Man\'s Flats',51.045,-115.250,'約32km · 30分']]},
+ '6/2':{c:'#6C3483',t:'弓湖 → 佩托湖（步道結冰折返）→ Thai House',s:[
+   ['Dead Man\'s Flats',51.045,-115.250,''],['弓湖 Bow Lake',51.671,-116.456,'約130km · 1h40'],
+   ['佩托湖 Peyto Lake',51.716,-116.526,'約10km · 15分'],['Thai House Canmore',51.089,-115.358,'約155km · 2h']]},
+ '6/3':{c:'#4A235A',t:'MLSR 跟團：夢蓮湖日出 · 露易絲湖（午睡後再搭纜車）',s:[
+   ['Dead Man\'s Flats',51.045,-115.250,''],['夢蓮湖 Moraine Lake',51.327,-116.186,'約95km · 1h15'],
+   ['露易絲湖 Lake Louise',51.417,-116.218,'約13km · 15分'],['回 Dead Man\'s Flats',51.045,-115.250,'約100km · 1h20']]},
+ '6/4':{c:'#922B21',t:'Golden → Last Spike → Chase 瀑布 → Kamloops',s:[
+   ['Dead Man\'s Flats',51.045,-115.250,''],['Golden 午餐',51.296,-116.964,'約140km · 2h(-1h時差)'],
+   ['Rogers Pass',51.300,-117.519,'約80km · 55分'],['Last Spike (Craigellachie)',50.974,-118.726,'約90km · 1h15'],
+   ['Chase Creek Falls',50.819,-119.685,'約75km · 1h'],['Kamloops 住宿',50.674,-120.328,'約55km · 45分']]},
+ '6/5':{c:'#922B21',t:'Kamloops → Chilliwack → Birchwood 農場 → Richmond',s:[
+   ['Kamloops',50.674,-120.328,''],['Britton Creek 休息區',49.780,-121.050,'約110km · 1h30'],
+   ['District 1881 (Chilliwack)',49.158,-121.951,'約85km · 1h10'],['Birchwood Dairy',49.073,-122.273,'約30km · 25分'],
+   ['Richmond 回家',49.166,-123.133,'約60km · 45分']]},
+ '6/6':{c:'#145A32',t:'漁人碼頭 → 奧運村 → Granville Island → Richmond',s:[
+   ['Steveston 漁人碼頭',49.125,-123.182,''],['奧運村 Olympic Village',49.266,-123.114,'約22km · 30分'],
+   ['Granville Island',49.271,-123.135,'彩虹小船'],['Richmond 回家',49.166,-123.133,'約15km · 25分']]},
+ '6/7':{c:'#1E8449',t:'Steveston → 告別晚餐 → 送機 YVR',s:[
+   ['Steveston',49.125,-123.182,''],['YVR 機場',49.195,-123.182,'約8km · 15分']]}
+};
+var _tmap,_tlayer,_tmInit=false;
+function initTripMap(){
+  if(!_tmInit){
+    _tmap=L.map('tripmap',{scrollWheelZoom:false}).setView([50.5,-119.5],6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(_tmap);
+    _tlayer=L.layerGroup().addTo(_tmap);
+    // 日期 chip
+    var md=document.getElementById('mapdays');
+    Object.keys(MAPDATA).forEach(function(d){
+      var c=document.createElement('div');c.className='dchip';
+      c.innerHTML='<span class="dc-d">'+d+'</span>';
+      c.style.borderColor=MAPDATA[d].c;
+      c.addEventListener('click',function(){
+        document.querySelectorAll('#mapdays .dchip').forEach(function(x){x.style.background='#fff';x.querySelector('.dc-d').style.color='#1A5276';});
+        c.style.background=MAPDATA[d].c;c.querySelector('.dc-d').style.color='#fff';
+        showMapDay(d);
+      });
+      md.appendChild(c);
+    });
+    _tmInit=true;
+    var first=(typeof todayStr!=='undefined'&&MAPDATA[todayStr])?todayStr:Object.keys(MAPDATA)[0];
+    showMapDay(first);
+    document.querySelectorAll('#mapdays .dchip').forEach(function(x){if(x.querySelector('.dc-d').textContent===first){x.style.background=MAPDATA[first].c;x.querySelector('.dc-d').style.color='#fff';}});
+  }
+  _tmap.invalidateSize();
+}
+function showMapDay(d){
+  var data=MAPDATA[d];if(!data)return;
+  _tlayer.clearLayers();
+  var pts=[],html='';
+  data.s.forEach(function(st,idx){
+    var ll=[st[1],st[2]];pts.push(ll);
+    L.circleMarker(ll,{radius:7,color:'#fff',weight:2,fillColor:data.c,fillOpacity:1}).addTo(_tlayer).bindPopup((idx+1)+'. '+st[0]);
+    if(st[3])html+='<div class="mleg">↓ '+st[3]+'</div>';
+    html+='<div class="mstop"><span class="num" style="background:'+data.c+'">'+(idx+1)+'</span><span>'+st[0]+'</span></div>';
+  });
+  L.polyline(pts,{color:data.c,weight:4,opacity:.75}).addTo(_tlayer);
+  _tmap.fitBounds(L.latLngBounds(pts).pad(0.2));
+  document.getElementById('maplist').innerHTML='<div class="mlist"><div class="mlist-h" style="background:'+data.c+'"><span>'+d+'</span><span class="tot">'+data.t+'</span></div>'+html+'</div>';
+}
 </script>
 </body>
 </html>
