@@ -411,7 +411,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
 <!-- MAP -->
 <div id="p6" class="pn">
-<div class="sl">🗺 行程地圖 · 選日期看路線與距離 <span style="color:#aaa;font-weight:400">(v12)</span></div>
+<div class="sl">🗺 行程地圖 · 選日期看路線與距離 <span style="color:#aaa;font-weight:400">(v13)</span></div>
 <div class="dquick" id="mapdays"></div>
 <div id="tripmap"></div>
 <div id="maplist"></div>
@@ -428,6 +428,10 @@ function sw(n){
   window.scrollTo({top:0});
   if(n===6)setTimeout(initTripMap,150);
 }
+// 共享照片連結（大家都看得到）：'MMDD':['圖片直連網址',...]（Imgur 最穩；Drive 用 thumbnail?id=...&sz=w1200）
+var EXTRA_PHOTOS={
+  // '0606':['https://i.imgur.com/xxxx.jpg'],
+};
 // 自動建立「日期 → 詳細行程卡片」對照表
 var dayMap={};
 document.querySelectorAll('.pn').forEach(function(panel){
@@ -474,11 +478,8 @@ function loadPhotos(box,key){
 }
 // ===== 共享照片連結（大家都看得到）：把連結加到對應日期即可 =====
 // 格式：'MMDD':['圖片直連網址1','網址2'...]  （Imgur 最穩；Drive 用 thumbnail?id=...&sz=w1200）
-var EXTRA_PHOTOS={
-  // '0606':['https://i.imgur.com/xxxx.jpg'],
-};
 function loadExtra(box,key){
-  var arr=EXTRA_PHOTOS[key];if(!arr)return;
+  var arr=(typeof EXTRA_PHOTOS!=='undefined'&&EXTRA_PHOTOS)?EXTRA_PHOTOS[key]:null;if(!arr)return;
   arr.forEach(function(u){
     var a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';
     var im=document.createElement('img');im.src=u;im.loading='lazy';a.appendChild(im);box.appendChild(a);
