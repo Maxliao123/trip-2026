@@ -492,6 +492,32 @@ if(todayChip&&dq){dq.scrollLeft=todayChip.offsetLeft-12;}
 // 每天：色、停點(名/座標)、每段距離(km/時間)
 // 停點格式：[名稱, 緯, 經, 該段說明, 該段km]
 var MAPDATA={
+ '5/22':{c:'#555',t:'抵達 YVR → Richmond',s:[
+   ['YVR 機場',49.195,-123.182,'',0],['Richmond 住宿',49.166,-123.133,'約8km · 15分',8]]},
+ '5/23':{c:'#1A5276',t:'Granville Island · QE Park · 本那比 · 大味火鍋',s:[
+   ['Richmond',49.166,-123.133,'',0],['Granville Island',49.271,-123.135,'約12km · 20分',12],
+   ['QE Park',49.242,-123.113,'約5km · 12分',5],['本那比美術館(Deer Lake)',49.236,-122.991,'約13km · 18分',13],
+   ['大味火鍋(Richmond)',49.170,-123.140,'約18km · 25分',18]]},
+ '5/24':{c:'#1A5276',t:'頤東點心 · Lynn Canyon 吊橋 · 萬歲',s:[
+   ['Richmond',49.166,-123.133,'',0],['頤東點心',49.170,-123.135,'約3km',3],
+   ['Lynn Canyon 吊橋',49.345,-123.018,'約30km · 40分',30],['萬歲日本料理(Richmond)',49.170,-123.140,'約32km · 40分',32]]},
+ '5/25':{c:'#1A5276',t:'Steveston 斑點蝦 · Tsawwassen Mills · Costco',s:[
+   ['Richmond',49.166,-123.133,'',0],['Steveston',49.125,-123.182,'約8km',8],
+   ['Tsawwassen Mills',49.010,-123.060,'約20km · 25分',20],['Costco(Richmond)',49.180,-123.100,'約22km · 25分',22]]},
+ '5/26':{c:'#1A5276',t:'蒸汽鐘 · Canada Place · Stanley Park · 美術館',s:[
+   ['Richmond',49.166,-123.133,'',0],['Gastown 蒸汽鐘',49.284,-123.109,'約14km · 25分',14],
+   ['Canada Place',49.289,-123.111,'約1km',1],['Stanley Park',49.300,-123.140,'約4km · 10分',4],
+   ['溫哥華美術館',49.283,-123.120,'約3km',3]]},
+ '5/27':{c:'#1A5276',t:'斑點蝦 · VanDusen 植物園 · Outlet',s:[
+   ['Richmond',49.166,-123.133,'',0],['Steveston 斑點蝦',49.125,-123.182,'約8km',8],
+   ['VanDusen 植物園',49.238,-123.128,'約17km · 25分',17],['McArthurGlen Outlet',49.193,-123.155,'約12km · 18分',12]]},
+ '5/28':{c:'#1A5276',t:'維多利亞一日（省議會 · 帝后 · Butchart）',s:[
+   ['Tsawwassen 渡輪',49.006,-123.132,'',0],['Swartz Bay（船程約1.5h）',48.688,-123.408,'渡輪',0],
+   ['BC 省議會/帝后',48.420,-123.370,'約32km · 40分',32],['Butchart Gardens',48.564,-123.470,'約22km · 30分',22]]},
+ '5/29':{c:'#1A5276',t:'LuLu Island 冰酒 · Costco · UBC 玫瑰園 · Acadia Beach',s:[
+   ['Richmond',49.166,-123.133,'',0],['LuLu Island Winery',49.135,-123.085,'約8km',8],
+   ['Costco',49.180,-123.100,'約6km',6],['UBC 玫瑰園',49.265,-123.255,'約18km · 25分',18],
+   ['Acadia Beach',49.272,-123.261,'約1km',1]]},
  '5/30':{c:'#6E2C00',t:'Richmond → Hope → 七彩湖 → Vernon',s:[
    ['Richmond',49.166,-123.133,'',0],['Bridal Veil Falls',49.181,-121.738,'約120km · 1.5h',120],
    ['Hope',49.383,-121.441,'約35km · 30分',35],['Merritt',50.112,-120.788,'約115km · 1h',115],
@@ -544,11 +570,7 @@ function initTripMap(){
       md.appendChild(c);
     });
     _tmInit=true;
-    var first=(typeof todayStr!=='undefined'&&MAPDATA[todayStr])?todayStr:null;
-    if(first){
-      var chips=md.querySelectorAll('.dchip');chips.forEach(function(x){if(x.querySelector('.dc-d').textContent===first){selChip(x,MAPDATA[first].c);}});
-      showMapDay(first);
-    } else { selChip(all,'#2C2C2A'); showAll(); }
+    selChip(all,'#2C2C2A');showAll();
   }
   _tmap.invalidateSize();
 }
