@@ -417,7 +417,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 <div id="maplist"></div>
 </div>
 
-<div class="foot">最後更新：2026/06/04 · 💡 點總覽任一天可跳到詳細行程</div>
+<div class="foot">最後更新：2026/06/07 · 💡 點總覽任一天可跳到詳細行程</div>
 
 <script>
 function sw(n){
@@ -426,7 +426,7 @@ function sw(n){
   document.getElementById('p'+n).classList.add('on');
   document.querySelectorAll('.tab').forEach(t=>{if(parseInt(t.dataset.i)===n)t.classList.add('on')});
   window.scrollTo({top:0});
-  if(n===6)setTimeout(initTripMap,80);
+  if(n===6)setTimeout(initTripMap,150);
 }
 // 自動建立「日期 → 詳細行程卡片」對照表
 var dayMap={};
@@ -633,11 +633,11 @@ var MAPDATA={
    ['公寓 Cooney Rd',49.168,-123.139,'約1km',1],['Townhouse Francis Rd',49.155,-123.165,'約5km',5],
    ['House Chatsworth Rd',49.155,-123.140,'約3km',3],['YVR 機場',49.195,-123.182,'約8km · 15分',8]]}
 };
-var _tmap,_tlayer,_tmInit=false,_tmTries=0;
+var _tmap,_tlayer,_tmInit=false,_tmTries=0,_allChip=null;
 function initTripMap(){
   if(typeof L==='undefined'){
     var box=document.getElementById('tripmap');
-    if(box&&!_tmInit)box.innerHTML='<div style="padding:1.2rem;font-size:.82rem;color:#6B6860;text-align:center">地圖載入中…（需要網路連線）</div>';
+    if(box)box.innerHTML='<div style="padding:1.2rem;font-size:.82rem;color:#6B6860;text-align:center">地圖載入中…（需要網路連線）</div>';
     if(_tmTries++<25)return void setTimeout(initTripMap,400);
     if(box)box.innerHTML='<div style="padding:1.2rem;font-size:.82rem;color:#922B21;text-align:center">地圖套件載入失敗，請檢查網路或重新整理</div>';
     return;
@@ -647,12 +647,10 @@ function initTripMap(){
     _tmap=L.map('tripmap',{scrollWheelZoom:false}).setView([50.5,-119.5],6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(_tmap);
     _tlayer=L.layerGroup().addTo(_tmap);
-    var md=document.getElementById('mapdays');
-    // 「全部」chip
-    var all=document.createElement('div');all.className='dchip';all.innerHTML='<span class="dc-d">全部</span>';all.style.borderColor='#2C2C2A';
-    all.addEventListener('click',function(){selChip(all,'#2C2C2A');showAll();});
-    md.appendChild(all);
-    // 每天 chip
+    var md=document.getElementById('mapdays');md.innerHTML='';
+    _allChip=document.createElement('div');_allChip.className='dchip';_allChip.innerHTML='<span class="dc-d">全部</span>';_allChip.style.borderColor='#2C2C2A';
+    _allChip.addEventListener('click',function(){selChip(_allChip,'#2C2C2A');showAll();});
+    md.appendChild(_allChip);
     Object.keys(MAPDATA).forEach(function(d){
       var c=document.createElement('div');c.className='dchip';
       c.innerHTML='<span class="dc-d">'+d+'</span>';c.style.borderColor=MAPDATA[d].c;
@@ -660,9 +658,11 @@ function initTripMap(){
       md.appendChild(c);
     });
     _tmInit=true;
-    selChip(all,'#2C2C2A');showAll();
   }
+  // 先確定地圖尺寸，再畫（避免容器尺寸=0 導致路線/點不顯示）
   _tmap.invalidateSize();
+  selChip(_allChip,'#2C2C2A');showAll();
+  setTimeout(function(){_tmap.invalidateSize();showAll();},300);
 }
 function selChip(chip,color){
   document.querySelectorAll('#mapdays .dchip').forEach(function(x){x.style.background='#fff';x.querySelector('.dc-d').style.color='#1A5276';});
