@@ -92,6 +92,13 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .dnote{background:#FBF8F1;border:1px dashed #D6C18A;border-radius:8px;padding:.5rem .7rem;margin:.1rem 0 .6rem;font-size:.74rem;line-height:1.75;color:#6b5526}
 .dnote-h{font-weight:700;color:#8a6d1a;display:block;margin-bottom:.15rem;font-size:.75rem}
 .dnote b{color:#7a5c12}
+.photos{display:flex;gap:.4rem;overflow-x:auto;padding:.35rem 0 .1rem;scrollbar-width:none}
+.photos::-webkit-scrollbar{display:none}
+.photos img{height:92px;border-radius:8px;object-fit:cover;display:block;flex-shrink:0}
+.maprow{display:flex;align-items:center;gap:.6rem;background:#fff;border:1px solid var(--border);border-radius:10px;padding:.6rem .7rem;margin-bottom:.5rem;text-decoration:none;color:var(--text)}
+.maprow .md{font-weight:700;font-size:.8rem;color:#1A5276;min-width:46px}
+.maprow .mt{flex:1;font-size:.76rem;line-height:1.4}
+.maprow .mg{font-size:.72rem;color:#fff;background:#1A5276;border-radius:6px;padding:.25rem .5rem;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -107,6 +114,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
   <div class="tab" data-i="3" onclick="sw(3)">⛰ 班夫</div>
   <div class="tab" data-i="4" onclick="sw(4)">🚗 回程</div>
   <div class="tab" data-i="5" onclick="sw(5)">🏙 溫哥華後段</div>
+  <div class="tab" data-i="6" onclick="sw(6)">🗺 地圖</div>
 </div>
 
 <!-- OVERVIEW -->
@@ -379,6 +387,24 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 </div></div>
 </div>
 
+<!-- MAP -->
+<div id="p6" class="pn">
+<div class="sl">🗺 全程概覽</div>
+<a class="maplink" href="https://www.google.com/maps/dir/Richmond,+BC/Vernon,+BC/250+2+Avenue,+Dead+Man's+Flats,+AB/Kamloops,+BC/Chilliwack,+BC/Richmond,+BC" target="_blank" rel="noopener">🗺 一鍵看整趟路線形狀＋總距離 ↗</a>
+<div class="note b" style="margin:.2rem 0 .6rem">💡 點下面每一天，會在 Google Maps 開啟當天路線，自動顯示距離與行車時間。</div>
+
+<div class="sl">每日路線 · 看距離</div>
+<a class="maprow" href="https://www.google.com/maps/dir/Richmond,+BC/Bridal+Veil+Falls+Provincial+Park,+BC/Hope,+BC/Merritt,+BC/Kalamalka+Lakeview+Drive+Lookout,+Vernon,+BC/5313+21+St,+Vernon,+BC" target="_blank" rel="noopener"><span class="md">5/30</span><span class="mt">Richmond → Hope → 七彩湖 → Vernon</span><span class="mg">看距離 ↗</span></a>
+<a class="maprow" href="https://www.google.com/maps/dir/5313+21+St,+Vernon,+BC/The+Taco+Club,+206+MacKenzie+Ave,+Revelstoke,+BC/Rogers+Pass+Discovery+Centre,+BC/Natural+Bridge,+Field,+BC/Emerald+Lake,+Field,+BC/Thai+House+Restaurant,+Canmore,+AB/250+2+Avenue,+Dead+Man's+Flats,+AB" target="_blank" rel="noopener"><span class="md">5/31</span><span class="mt">Vernon → Rogers Pass → Emerald Lake → Dead Man's Flats</span><span class="mg">看距離 ↗</span></a>
+<a class="maprow" href="https://www.google.com/maps/dir/250+2+Avenue,+Dead+Man's+Flats,+AB/Banff+Gondola,+Banff,+AB/Bow+Falls,+Banff,+AB/Vermilion+Lakes,+Banff,+AB/250+2+Avenue,+Dead+Man's+Flats,+AB" target="_blank" rel="noopener"><span class="md">6/1</span><span class="mt">BL1 跟團：硫磺山纜車 · Bow Falls · Vermilion Lakes</span><span class="mg">看距離 ↗</span></a>
+<a class="maprow" href="https://www.google.com/maps/dir/250+2+Avenue,+Dead+Man's+Flats,+AB/Bow+Lake,+AB/Peyto+Lake,+AB/Thai+House+Restaurant,+Canmore,+AB/250+2+Avenue,+Dead+Man's+Flats,+AB" target="_blank" rel="noopener"><span class="md">6/2</span><span class="mt">弓湖 → 佩托湖（步道結冰折返）→ Thai House</span><span class="mg">看距離 ↗</span></a>
+<a class="maprow" href="https://www.google.com/maps/dir/250+2+Avenue,+Dead+Man's+Flats,+AB/Moraine+Lake,+AB/Lake+Louise,+AB/250+2+Avenue,+Dead+Man's+Flats,+AB" target="_blank" rel="noopener"><span class="md">6/3</span><span class="mt">MLSR 跟團：夢蓮湖日出 · 露易絲湖 · 午睡後再搭纜車</span><span class="mg">看距離 ↗</span></a>
+<a class="maprow" href="https://www.google.com/maps/dir/250+2+Avenue,+Dead+Man's+Flats,+AB/Turning+Point+Restaurant,+Golden,+BC/Rogers+Pass+Discovery+Centre,+BC/The+Last+Spike,+Craigellachie,+BC/Chase+Creek+Falls+Parking+Lot,+Chase,+BC/Nishino+Sushi,+Kamloops,+BC/918+Dever+Drive,+Kamloops,+BC" target="_blank" rel="noopener"><span class="md">6/4</span><span class="mt">Golden → Last Spike → Chase 瀑布 → Kamloops</span><span class="mg">看距離 ↗</span></a>
+<a class="maprow" href="https://www.google.com/maps/dir/918+Dever+Drive,+Kamloops,+BC/Britton+Creek+Rest+Area,+BC/District+1881,+Chilliwack,+BC/Birchwood+Dairy,+1154+Fadden+Rd,+Abbotsford,+BC/Richmond,+BC" target="_blank" rel="noopener"><span class="md">6/5</span><span class="mt">Kamloops → Chilliwack → Birchwood 農場 → Richmond</span><span class="mg">看距離 ↗</span></a>
+<a class="maprow" href="https://www.google.com/maps/dir/Steveston,+Richmond,+BC/Olympic+Village,+Vancouver,+BC/Granville+Island,+Vancouver,+BC/Richmond,+BC" target="_blank" rel="noopener"><span class="md">6/6</span><span class="mt">漁人碼頭 → 奧運村 → Granville Island → Richmond</span><span class="mg">看距離 ↗</span></a>
+<a class="maprow" href="https://www.google.com/maps/dir/Steveston,+Richmond,+BC/Vancouver+International+Airport+(YVR),+Richmond,+BC" target="_blank" rel="noopener"><span class="md">6/7</span><span class="mt">Steveston → 告別晚餐 → 送機 YVR</span><span class="mg">看距離 ↗</span></a>
+</div>
+
 <div class="foot">最後更新：2026/06/04 · 💡 點總覽任一天可跳到詳細行程</div>
 
 <script>
@@ -400,8 +426,30 @@ document.querySelectorAll('.pn').forEach(function(panel){
     if(dd){d=dd.textContent.trim();}
     else{var ht=day.querySelector('.tc-ht');if(ht){var m=ht.textContent.match(/(\d{1,2}\/\d{1,2})/);if(m)d=m[1];}}
     if(d&&!dayMap[d]){dayMap[d]={n:n,el:day};}
+    // 每天自動相簿：載入 photos/{mmdd}_1.jpg、_2.jpg…
+    if(d){
+      var pa=d.split('/'); var key=('0'+pa[0]).slice(-2)+('0'+pa[1]).slice(-2);
+      var pc=document.createElement('div'); pc.className='photos';
+      (day.querySelector('.db')||day).appendChild(pc);
+      loadPhotos(pc,key);
+    }
   });
 });
+// 自動相簿：依序試載 photos/{key}_n.jpg，載不到就停
+function loadPhotos(box,key){
+  var i=1;
+  (function next(){
+    if(i>30)return;
+    var probe=new Image();
+    probe.onload=function(){
+      var a=document.createElement('a');a.href='photos/'+key+'_'+i+'.jpg';a.target='_blank';a.rel='noopener';
+      var im=document.createElement('img');im.src=a.href;im.loading='lazy';a.appendChild(im);box.appendChild(a);
+      i++;next();
+    };
+    probe.onerror=function(){};
+    probe.src='photos/'+key+'_'+i+'.jpg';
+  })();
+}
 // 共用：跳到某天的詳細行程卡片
 function goDay(d){
   var t=dayMap[d];if(!t)return;
