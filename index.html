@@ -23,7 +23,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .pn{display:none;padding:1rem 1rem 2rem}.pn.on{display:block}
 .sl{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--sub);margin:1.1rem 0 .45rem}
 .day{background:var(--card);border-radius:12px;overflow:hidden;margin-bottom:.55rem;border:1px solid var(--border)}
-.day.done{opacity:.75}
+.day.done{opacity:1}
 .day.tour{border:2px solid #4A235A}
 .dh{display:grid;grid-template-columns:76px 1fr;min-height:54px}
 .dl{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:.5rem;color:#fff;position:relative}
@@ -102,7 +102,11 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .addph b{font-size:1.1rem;font-weight:400;line-height:1}
 .lbox{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:9999}
 .lbox.on{display:flex}
-.lbox img{max-width:94%;max-height:90%;border-radius:8px}
+.lbox img{max-width:90%;max-height:86%;border-radius:8px}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:2.6rem;width:48px;height:64px;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;opacity:.85}
+.lb-prev{left:4px}.lb-next{right:4px}
+.lb-x{position:absolute;top:14px;right:18px;color:#fff;font-size:1.6rem;cursor:pointer;z-index:2}
+.lb-count{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:#fff;font-size:.85rem;letter-spacing:.05em}
 .maprow{display:flex;align-items:center;gap:.6rem;background:#fff;border:1px solid var(--border);border-radius:10px;padding:.6rem .7rem;margin-bottom:.5rem;text-decoration:none;color:var(--text)}
 .maprow .md{font-weight:700;font-size:.8rem;color:#1A5276;min-width:46px}
 .maprow .mt{flex:1;font-size:.76rem;line-height:1.4}
@@ -411,7 +415,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
 <!-- MAP -->
 <div id="p6" class="pn">
-<div class="sl">🗺 行程地圖 · 選日期看路線與距離 <span style="color:#aaa;font-weight:400">(v13)</span></div>
+<div class="sl">🗺 行程地圖 · 選日期看路線與距離 <span style="color:#aaa;font-weight:400">(v14)</span></div>
 <div class="dquick" id="mapdays"></div>
 <div id="tripmap"></div>
 <div id="maplist"></div>
@@ -443,48 +447,46 @@ document.querySelectorAll('.pn').forEach(function(panel){
     if(dd){d=dd.textContent.trim();}
     else{var ht=day.querySelector('.tc-ht');if(ht){var m=ht.textContent.match(/(\d{1,2}\/\d{1,2})/);if(m)d=m[1];}}
     if(d&&!dayMap[d]){dayMap[d]={n:n,el:day};}
-    // 每天相簿：① GitHub /photos 的公開照片 ② 本機新增的照片 ③ 加照片按鈕
+    // 每天相簿：顯示 GitHub /photos 的公開照片
     if(d){
       var pa=d.split('/'); var key=('0'+pa[0]).slice(-2)+('0'+pa[1]).slice(-2);
       var pc=document.createElement('div'); pc.className='photos'; pc.setAttribute('data-day',key);
       (day.querySelector('.db')||day).appendChild(pc);
       loadPhotos(pc,key);
       loadExtra(pc,key);
-      var lw=document.createElement('span'); lw.className='localwrap'; lw.style.display='contents'; pc.appendChild(lw);
-      var add=document.createElement('div'); add.className='addph'; add.innerHTML='<b>＋</b>加照片<span style="font-size:.55rem;color:#999">(只有我)</span>'; add.setAttribute('data-day',key);
-      add.addEventListener('click',function(){addPhotos(key,pc);});
-      pc.appendChild(add);
-      var sh=document.createElement('a'); sh.className='addph'; sh.style.textDecoration='none';
-      sh.innerHTML='<b>📤</b>共享上傳<span style="font-size:.55rem;color:#999">'+key+'_1.jpg</span>';
-      sh.href='https://github.com/maxliao123/trip-2026/upload/main/photos'; sh.target='_blank'; sh.rel='noopener';
-      pc.appendChild(sh);
     }
   });
 });
+// 在相簿列加一張縮圖，點擊開啟可滑動的全螢幕看圖
+function addThumb(box,url){
+  var im=document.createElement('img');im.src=url;im.loading='lazy';
+  im.addEventListener('click',function(){
+    var urls=Array.prototype.map.call(box.querySelectorAll('img'),function(x){return x.src;});
+    openGallery(urls,urls.indexOf(im.src));
+  });
+  box.appendChild(im);
+}
 // 自動相簿：依序試載 photos/{key}_n.jpg，載不到就停
 function loadPhotos(box,key){
   var i=1;
   (function next(){
     if(i>10)return;
     var probe=new Image();
-    probe.onload=function(){
-      var a=document.createElement('a');a.href='photos/'+key+'_'+i+'.jpg';a.target='_blank';a.rel='noopener';
-      var im=document.createElement('img');im.src=a.href;im.loading='lazy';a.appendChild(im);box.appendChild(a);
-      i++;next();
-    };
+    probe.onload=function(){addThumb(box,'photos/'+key+'_'+i+'.jpg');i++;next();};
     probe.onerror=function(){};
     probe.src='photos/'+key+'_'+i+'.jpg';
   })();
 }
-// ===== 共享照片連結（大家都看得到）：把連結加到對應日期即可 =====
-// 格式：'MMDD':['圖片直連網址1','網址2'...]  （Imgur 最穩；Drive 用 thumbnail?id=...&sz=w1200）
+// ===== 共享照片連結（大家都看得到）：'MMDD':['圖片直連網址',...] =====
 function loadExtra(box,key){
   var arr=(typeof EXTRA_PHOTOS!=='undefined'&&EXTRA_PHOTOS)?EXTRA_PHOTOS[key]:null;if(!arr)return;
-  arr.forEach(function(u){
-    var a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';
-    var im=document.createElement('img');im.src=u;im.loading='lazy';a.appendChild(im);box.appendChild(a);
-  });
+  arr.forEach(function(u){addThumb(box,u);});
 }
+// ===== 可滑動的全螢幕看圖 =====
+var _gal=[],_gi=0;
+function openGallery(urls,idx){if(!urls||!urls.length)return;_gal=urls;_gi=idx<0?0:idx;galShow();document.getElementById('lbox').classList.add('on');}
+function galShow(){document.getElementById('lboximg').src=_gal[_gi];var c=document.getElementById('lbcount');if(c)c.textContent=(_gi+1)+' / '+_gal.length;}
+function galMove(d){_gi=(_gi+d+_gal.length)%_gal.length;galShow();}
 // ===== 本機相簿 (IndexedDB，存在這台裝置) =====
 var PDB=null;
 function openPDB(cb){
@@ -704,6 +706,22 @@ function showAll(){
   document.getElementById('maplist').innerHTML='<div class="mlist"><div class="mlist-h" style="background:#2C2C2A"><span>全部行程</span><span class="tot">🚗 總計約 '+grand+' km</span></div>'+html+'</div>';
 }
 </script>
-<div class="lbox" id="lbox" onclick="this.classList.remove('on')"><img id="lboximg" src=""></div>
+<div class="lbox" id="lbox">
+  <span class="lb-x" onclick="document.getElementById('lbox').classList.remove('on')">✕</span>
+  <span class="lb-nav lb-prev" onclick="galMove(-1)">‹</span>
+  <img id="lboximg" src="">
+  <span class="lb-nav lb-next" onclick="galMove(1)">›</span>
+  <span class="lb-count" id="lbcount"></span>
+</div>
+<script>
+(function(){
+  var lb=document.getElementById('lbox');
+  lb.addEventListener('click',function(e){if(e.target===lb)lb.classList.remove('on');});
+  document.addEventListener('keydown',function(e){if(!lb.classList.contains('on'))return;if(e.key==='ArrowRight')galMove(1);else if(e.key==='ArrowLeft')galMove(-1);else if(e.key==='Escape')lb.classList.remove('on');});
+  var x0=null;
+  lb.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});
+  lb.addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)galMove(dx<0?1:-1);x0=null;},{passive:true});
+})();
+</script>
 </body>
 </html>
