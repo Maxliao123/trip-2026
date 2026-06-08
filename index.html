@@ -457,30 +457,31 @@ document.querySelectorAll('.pn').forEach(function(panel){
     }
   });
 });
-// 在相簿列加一張縮圖，點擊開啟可滑動的全螢幕看圖
-function addThumb(box,url){
-  var im=document.createElement('img');im.src=url;im.loading='lazy';
+// 在相簿列加一張縮圖(載小圖)，點擊開啟可滑動的全螢幕看大圖
+function addThumb(box,full,thumb){
+  var im=document.createElement('img');im.src=thumb||full;im.loading='lazy';im.setAttribute('data-full',full);
   im.addEventListener('click',function(){
-    var urls=Array.prototype.map.call(box.querySelectorAll('img'),function(x){return x.src;});
-    openGallery(urls,urls.indexOf(im.src));
+    var urls=Array.prototype.map.call(box.querySelectorAll('img'),function(x){return x.getAttribute('data-full');});
+    openGallery(urls,urls.indexOf(full));
   });
   box.appendChild(im);
 }
-// 自動相簿：依序試載 photos/{key}_n.jpg，載不到就停
+// 自動相簿：列表載 thumbs 小圖，點開才載大圖；依序試載直到找不到
 function loadPhotos(box,key){
   var i=1;
   (function next(){
     if(i>15)return;
+    var idx=i;
     var probe=new Image();
-    probe.onload=function(){addThumb(box,'photos/'+key+'_'+i+'.jpg');i++;next();};
+    probe.onload=function(){addThumb(box,'photos/'+key+'_'+idx+'.jpg','photos/thumbs/'+key+'_'+idx+'.jpg');i++;next();};
     probe.onerror=function(){};
-    probe.src='photos/'+key+'_'+i+'.jpg';
+    probe.src='photos/thumbs/'+key+'_'+i+'.jpg';
   })();
 }
 // ===== 共享照片連結（大家都看得到）：'MMDD':['圖片直連網址',...] =====
 function loadExtra(box,key){
   var arr=(typeof EXTRA_PHOTOS!=='undefined'&&EXTRA_PHOTOS)?EXTRA_PHOTOS[key]:null;if(!arr)return;
-  arr.forEach(function(u){addThumb(box,u);});
+  arr.forEach(function(u){addThumb(box,u,u);});
 }
 // ===== 可滑動的全螢幕看圖 =====
 var _gal=[],_gi=0;
