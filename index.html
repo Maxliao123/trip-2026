@@ -470,7 +470,7 @@ function addThumb(box,full,thumb){
 function loadPhotos(box,key){
   var i=1;
   (function next(){
-    if(i>20)return;
+    if(i>30)return;
     var idx=i;
     var probe=new Image();
     probe.onload=function(){addThumb(box,'photos/'+key+'_'+idx+'.jpg','photos/thumbs/'+key+'_'+idx+'.jpg');i++;next();};
